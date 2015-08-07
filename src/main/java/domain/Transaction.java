@@ -5,18 +5,17 @@ import java.util.HashSet;
 import java.util.HashSet.*;
 import java.util.Set;
 
-@Entity
-@Table(name="transactionTable")
+//@Entity
 public class Transaction {
 
 
     @Id
     @GeneratedValue
-    @Column(name = "lastTnc")
     private long tId;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "transaction")
     private Set<SnackReservation> snackReservations;
+
     public Set <SnackReservation> getReservations() {
         return snackReservations;
     }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-@Stateless
+//@Stateless
 public class ReservationService  implements Serializable{
 
 
@@ -19,9 +19,9 @@ public class ReservationService  implements Serializable{
 
       public List<SeatReservation> findSeatReservationByClient(Client client, Transaction transaction) {
 
-        return em.createQuery("select sr from seatReservation sr, seatReservation.lastTnc, " +
+        return em.createQuery("select sr from SeatReservation sr, sr.lastTnc, " +
                         "Transaction.tId  join Transaction " +
-                        "where seatReservation.lastTnc=:tId and Transaction.client_fk=:cId",
+                        "where sr.lastTnc=:tId and Transaction.client_fk=:cId",
                 SeatReservation.class)
                 .setParameter("cId", client.getcId()).setParameter("tId",transaction.gettId())
                 .getResultList();

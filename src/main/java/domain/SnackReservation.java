@@ -4,8 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@Embeddable
-@Entity
+//@Entity
 @Table(name="snackReservation")
 public class SnackReservation extends Item implements Serializable {
 
@@ -47,14 +46,11 @@ public class SnackReservation extends Item implements Serializable {
 
     @Id
     @GeneratedValue
-    @Column(name="snackResId")
     private long snrId;
 
 
-    @Column(name="lastTnc")
     private long lastTnc;
 
-    @Column(name="seatReservation_fk")
     private long srId;
 
     public SnackReservation ( ) {

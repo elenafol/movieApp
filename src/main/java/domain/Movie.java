@@ -1,6 +1,4 @@
 package domain;
-import javax.json.JsonObject;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -8,7 +6,7 @@ import java.util.Set;
 
 
 
-@Entity
+//@Entity
 @Table(name="movie")
 public class Movie implements Serializable{
 

@@ -2,19 +2,14 @@ package service;
 
 
 import domain.Movie;
-import domain.Seat;
-import domain.Transaction;
-
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
-@Stateless
+//@Stateless
 public class MovieDao implements Serializable{
 
     @PersistenceContext(unitName = "movieServicePU")
@@ -24,7 +19,7 @@ public class MovieDao implements Serializable{
     public List getAll() {
 
             return em.createQuery(
-                    "select m from movie m")
+                    "select m from Movie m")
                     .getResultList();
         }
 

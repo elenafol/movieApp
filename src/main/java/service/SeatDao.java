@@ -10,7 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
 
-@Stateless
+//@Stateless
 public class SeatDao {
 
     @PersistenceContext(unitName = "movieServicePU")
@@ -29,7 +29,7 @@ public class SeatDao {
 
     public List <Seat> findAllAvailableByMovie(Movie movie) {
         return em.createQuery(
-                "select s from Seat s where s.movie_fk = :mId and s.seatRes_fk = :null", Seat.class)
+                "select s from Seat s where s.movie.id = :mId and s.seatReservation IS NULL", Seat.class)
                 .setParameter("mId", movie.getMId())
                 .getResultList();
     }

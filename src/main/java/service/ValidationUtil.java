@@ -2,14 +2,10 @@ package service;
 
 import domain.*;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
-/**
- * Created by Elena on 30.07.2015.
- */
+
 public class ValidationUtil {
     static final Object lock = new Object();
     static int tnc;
@@ -32,16 +28,11 @@ public class ValidationUtil {
         return tnc;
     }
 
-    //Read set ans write sets von Client
-    JsonArray readSet = sets.getJsonArray("read_set");
-    //create/update/delete set (1 set mit Änderungen -> write_set für Schreibphase, alle anderen leer)
-    JsonArray createSet = sets.getJsonArray("create_set");
-    JsonArray updateSet = sets.getJsonArray("update_set");
-    JsonArray deleteSet = sets.getJsonArray("delete_set");
-
     //Sets werden als Json von dem Client gesendet (sets= writeset, readset, updateset, deleteset)
     public boolean isTransactionValid(JsonObject sets, long tnc) {
 
+        //Read set ans write sets von Client
+        JsonArray readSet = sets.getJsonArray("read_set");
 
         for (int i = 0; i < readSet.size(); i++) {
 
@@ -90,9 +81,8 @@ public class ValidationUtil {
                     }
                     break;
             }
-            return true;
-
         }
+        return true;
     }
 
 
@@ -102,77 +92,71 @@ public class ValidationUtil {
         //int midTn = tnc;
         boolean valid;
 
-    public String writeSetType() {
-        if (updateSet.isEmpty() && deleteSet.isEmpty()) {
-            JsonArray writeSet = createSet;
-            String setType = "create";
-        } else if (updateSet.isEmpty() && createSet.isEmpty()) {
-            JsonArray writeSet = deleteSet;
-            String setType = "delete";
-        } else
-            JsonArray writeSet = updateSet;
-        String setType = "update";
-        return setType;
+
+        long udi = Long.valueOf(sets.getJsonNumber("client").longValue());
+        Client client = clientDao.createClient(udi);
+
+        // mit json object von client als parameter
+        valid = isTransactionValid(sets, tnc);
+
+        if (valid) {
+            synchronized (lock) {
+                int tnFinish = tnc;
+                valid = isTransactionValid(sets, tnFinish);
+                //writePhase
+                if (valid) {
+                    writeChangesToDatbase(sets);
+                }
+
+            }
+
+        }
+        return valid;
     }
 
-    long udi = Long.valueOf(sets.getJsonNumber("client").longValue());
-    Client client = clientDao.createClient(udi);
+    private void writeChangesToDatbase(JsonObject sets) {
+        //create/update/delete set (1 set mit Änderungen -> write_set für Schreibphase, alle anderen leer)
+        JsonArray createSet = sets.getJsonArray("create_set");
+        JsonArray updateSet = sets.getJsonArray("update_set");
+        JsonArray deleteSet = sets.getJsonArray("delete_set");
 
-    // mit json object von client als parameter
-    valid= isTransactionValid(sets, tnc);
+        // Create items
+        for (int i = 0; i < createSet.size(); i++) {
+            JsonObject item = createSet.getJsonObject(i);
+            switch (item.getString("type")) {
+                case "seatReservation":
+                    reservationService.createSeatReservation(item);
+                    break;
+                case "snackReservation":
+                    reservationService.createSeatReservation(item);
+                    break;
+            }
+        }
 
-    if(valid){
-        synchronized (lock) {
-            int tnFinish = tnc;
-            valid = isTransactionValid(sets, tnFinish);
+        // Update items
+        for (int i = 0; i < updateSet.size(); i++) {
+            JsonObject item = updateSet.getJsonObject(i);
+            switch (item.getString("type")) {
+                case "seatReservation":
+                    reservationService.updateSeatReservation(item);
+                    break;
+                case "snackReservation":
+                    reservationService.updateSnackReservation(item);
+                    break;
+            }
+        }
 
-
-            //writePhase
-            if (valid) {
-                //Änderung von Client werden geschrieben
-                //Get Paramter from Json Object
-
-                for (int i = 0; i < writeSet.size(); i++) {
-
-                    JsonObject item = writeSet.getJsonObject(i);
-                    String type = item.getString("type");
-
-
-                    if ("seatReservation".equalsIgnoreCase(type)) {
-                        switch (writeSetType()) {
-                            case "create":
-                                reservationService.createSeatReservation(item);
-                                break;
-                            case "update":
-                                reservationService.updateSeatReservation(item);
-                                break;
-                            case "delete":
-                                reservationService.deleteSeatReservation(item);
-                                break;
-                        }
-
-
-                        else if ("snackReservation".equalsIgnoreCase(type)) {
-                            switch (writeSetType()) {
-                                case "create":
-                                    reservationService.createSnackReservation(item);
-                                    break;
-                                case "update":
-                                    reservationService.updateSnackReservation(item);
-                                    break;
-                                case "delete":
-                                    reservationService.deleteSnackReservation(item);
-                                    break;
-                            }
-                            transactionService.addTransaction(client);
-                        }
-
-                    }
-
-                    return valid;
-                }
+        // Delete items
+        for (int i = 0; i < deleteSet.size(); i++) {
+            JsonObject item = deleteSet.getJsonObject(i);
+            switch (item.getString("type")) {
+                case "seatReservation":
+//                                reservationService.deleteSeatReservation(item); //TODO
+                    break;
+                case "snackReservation":
+//                                reservationService.deleteSnackReservation(item); //TODO
+                    break;
             }
         }
     }
-}
 }

@@ -3,12 +3,10 @@ package service;
 
 import domain.Client;
 
-
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Stateless
+//@Stateless
 public class ClientDao {
 
     @PersistenceContext(unitName = "movieServicePU")

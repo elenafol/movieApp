@@ -3,7 +3,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 
-@Entity
+//@Entity
 @Table(name="client")
 public class Client {
 
@@ -20,10 +20,7 @@ public class Client {
 
     @Id
     @GeneratedValue
-    @Column(name="cId")
     private  long cId;
-
-    @Column(name="udI")
     private  long udI;
 
     public long getcId() {

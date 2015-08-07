@@ -1,11 +1,10 @@
 package domain;
 
-import javax.json.JsonObject;
 import javax.persistence.*;
 import java.io.Serializable;
 
 
-@Entity
+//@Entity
 @Table(name="Seat")
 public class Seat implements  Serializable{
 

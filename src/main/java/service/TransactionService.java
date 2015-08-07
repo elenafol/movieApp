@@ -1,7 +1,6 @@
 package service;
 
 
-import com.google.gson.JsonObject;
 import domain.Client;
 import domain.SeatReservation;
 import domain.SnackReservation;
@@ -9,11 +8,9 @@ import domain.Transaction;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
-@Stateless
+//@Stateless
 public class TransactionService {
     @PersistenceContext(unitName = "movieServicePU")
     public EntityManager em;

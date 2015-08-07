@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-@Stateless
+//@Stateless
 public class SnackDao {
 
     @PersistenceContext(unitName = "movieServicePU")
@@ -20,7 +20,7 @@ public class SnackDao {
     //alle zu einer Reservierung
     public List<Snack> findSnackByReservation(SnackReservation snackReservation) {
 
-        List<Snack> snacks= em.createQuery("select sn from Snack sn where sn.rId=:rId",
+        List<Snack> snacks= em.createQuery("select sn from Snack sn where sn.id=:rId",
                 Snack.class)
                 .setParameter("rId", snackReservation.getSnrId())
                 .getResultList();
@@ -28,7 +28,7 @@ public class SnackDao {
     }
 
     public Snack findSnackByTnc(Transaction transaction){
-        return em.createQuery("select sn from snack sn where sn.lastTnc= :lastTnc", Snack.class)
+        return em.createQuery("select sn from Snack sn where sn.lastTnc= :lastTnc", Snack.class)
                 .setParameter("lastTnc", transaction.getLastTnc())
                 .getSingleResult();
     }
@@ -43,7 +43,7 @@ public class SnackDao {
     }
 
     public Snack findSnackById(long id){
-        return em.createQuery("select s from seat s where s.snId= :snackId", Snack.class)
+        return em.createQuery("select s from Seat s where s.snId= :snackId", Snack.class)
                 .setParameter("snackId", id)
                 .getSingleResult();
     }
