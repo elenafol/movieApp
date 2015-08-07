@@ -1,22 +1,23 @@
 package rest;
-import domain.*;
+import domain.Client;
+import domain.Movie;
+import domain.Seat;
+import domain.Snack;
 import service.*;
 
-import java.util.*;
-
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 
 
 
-public class Server {
+public class MovieAppService {
 
 
     @EJB
