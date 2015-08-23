@@ -1,51 +1,29 @@
 package domain;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 
-//@Entity
-@Table(name="client")
+@Entity
 public class Client {
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
-    private Set<Transaction> transactions;
+    @Id
+    @GeneratedValue
+    private  long id;
+    private  long udId;
 
-    public Set <Transaction> getTransactions() {
-        return transactions;
-    }
+    @OneToMany(mappedBy = "client")
+    private Collection<Transactions> transactions = new ArrayList<>();
+
+
 
     public Client() {
 
     }
 
-    @Id
-    @GeneratedValue
-    private  long cId;
-    private  long udI;
-
-    public long getcId() {
-        return cId;
-    }
-
-    public void setcId(long cId) {
-        this.cId = cId;
-    }
-
-    public long getUdI() {
-        return udI;
-    }
-
-    public void setUdI(long udI) {
-        this.udI = udI;
-    }
-
-    @Override
-    public String toString() {
-        return "Client{" +
-                "transactions=" + transactions +
-                ", cId=" + cId +
-                ", udI=" + udI +
-                '}';
+    public Collection<Transactions> getTransactions() {
+        return transactions;
     }
 
     @Override
@@ -55,18 +33,34 @@ public class Client {
 
         Client client = (Client) o;
 
-        if (cId != client.cId) return false;
-        if (udI != client.udI) return false;
-        return !(transactions != null ? !transactions.equals(client.transactions) : client.transactions != null);
+        return id == client.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = transactions != null ? transactions.hashCode() : 0;
-        result = 31 * result + (int) (cId ^ (cId >>> 32));
-        result = 31 * result + (int) (udI ^ (udI >>> 32));
-        return result;
+        return (int) (id ^ (id >>> 32));
+    }
+
+    public void setTransactions(Collection<Transactions> transactions) {
+        this.transactions = transactions;
+    }
+
+    public long getUdId() {
+        return udId;
+
+    }
+
+    public void setUdId(long udId) {
+        this.udId = udId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     //Für die Validerung
@@ -80,12 +74,9 @@ public class Client {
         this.trn = trn;
     }
 
-    private Transaction t = new Transaction();
+    private Transactions t = new Transactions();
     public int incTrn() {return ++this.trn;}
-
-
-
-    public Client(Transaction t/*//**/
+*/
 
 
 }

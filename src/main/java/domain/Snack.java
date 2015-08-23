@@ -4,16 +4,64 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 
-//@Entity
-@Table (name="snack")
-public class Snack implements Serializable {
+@Entity
+public class Snack  {
 
 
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "snackReservation_fk", nullable = false, referencedColumnName = "snackResId")
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private long snackReservation_fk;
+
+    private long lastTnc;
+
+    private String name;
+
+    private String snackType;
+
+    @ManyToOne
+    //@JoinColumn(name = "snackReservation_fk", nullable = false, referencedColumnName = "snackResId")
     private SnackReservation snackReservation;
 
+
+    @ManyToOne
+    //@JoinColumn(name="lastTnc", referencedColumnName="lastTnc")
+    private Transactions transactions;
+
+
+    public Snack() {
+
+    }
+
+    public long getLastTnc() {
+        return lastTnc;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Snack snack = (Snack) o;
+
+        return id == snack.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    public Transactions getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Transactions Transactions) {
+        this.transactions = Transactions;
+    }
 
     public SnackReservation getSnackReservation() {
         return snackReservation;
@@ -21,65 +69,6 @@ public class Snack implements Serializable {
 
     public void setSnackReservation(SnackReservation snackReservation) {
         this.snackReservation = snackReservation;
-    }
-
-    @ManyToOne
-    @JoinColumn(name="lastTnc", referencedColumnName="lastTnc")
-    private Transaction transaction;
-
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
-
-
-    @Id
-    @Column(name="snId",  nullable = false, updatable = false)
-    @GeneratedValue
-    private long snId;
-
-    @Column(name="snackResId")
-    private long snrId;
-
-    @Column(name="lastTnc")
-    private long lastTnc;
-
-    @Column(name="name")
-    private String name;
-
-    @Column(name="snackType")
-    private String snackType;
-
-
-    public Snack() {
-
-    }
-
-    public long getSnId() {
-        return snId;
-    }
-
-    public void setSnId(long snId) {
-        this.snId = snId;
-    }
-
-    public long getLastTnc() {
-        return lastTnc;
-    }
-
-    public void setLastTnc(long lastTnc) {
-        this.lastTnc = lastTnc;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getSnackType() {
@@ -90,55 +79,34 @@ public class Snack implements Serializable {
         this.snackType = snackType;
     }
 
+    public String getName() {
 
-    public long getSnrId() {
-        return snrId;
+        return name;
     }
 
-    public void setSnrId(long snrId) {
-        this.snrId = snrId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Snack{" +
-                "snackReservation=" + snackReservation +
-                ", transaction=" + transaction +
-                ", snId=" + snId +
-                ", snrId=" + snrId +
-                ", lastTnc=" + lastTnc +
-                ", name='" + name + '\'' +
-                ", snackType='" + snackType + '\'' +
-                '}';
+    public void setLastTnc(long lastTnc) {
+        this.lastTnc = lastTnc;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Snack snack = (Snack) o;
-
-        if (snId != snack.snId) return false;
-        if (snrId != snack.snrId) return false;
-        if (lastTnc != snack.lastTnc) return false;
-        if (snackReservation != null ? !snackReservation.equals(snack.snackReservation) : snack.snackReservation != null)
-            return false;
-        if (transaction != null ? !transaction.equals(snack.transaction) : snack.transaction != null) return false;
-        if (name != null ? !name.equals(snack.name) : snack.name != null) return false;
-        return !(snackType != null ? !snackType.equals(snack.snackType) : snack.snackType != null);
+    public long getSnackReservation_fk() {
+        return snackReservation_fk;
 
     }
 
-    @Override
-    public int hashCode() {
-        int result = snackReservation != null ? snackReservation.hashCode() : 0;
-        result = 31 * result + (transaction != null ? transaction.hashCode() : 0);
-        result = 31 * result + (int) (snId ^ (snId >>> 32));
-        result = 31 * result + (int) (snrId ^ (snrId >>> 32));
-        result = 31 * result + (int) (lastTnc ^ (lastTnc >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (snackType != null ? snackType.hashCode() : 0);
-        return result;
+    public void setSnackReservation_fk(long snackReservation_fk) {
+        this.snackReservation_fk = snackReservation_fk;
+    }
+
+    public long getId() {
+
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

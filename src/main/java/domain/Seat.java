@@ -4,14 +4,53 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 
-//@Entity
-@Table(name="Seat")
-public class Seat implements  Serializable{
+@Entity
+public class Seat{
 
     //Ein Movie hat mehrere Sitze
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "movie_fk", nullable = false, referencedColumnName="mId")
+    //@JoinColumn(name = "movie_fk", nullable = false, referencedColumnName="mId")
     private Movie movie;
+
+    //Eine Sitzplatzbuchung beinhaltet mehrere Sitzplätze
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    //@JoinColumn(name = "seatReservation_fk", nullable = false, referencedColumnName="seatResId")
+    private SeatReservation seatReservation;
+
+    //Eine Transaktion kann mehrere Sitzplätze buchen/verändern
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    //@JoinColumn(name = "lastTnc", nullable = false, referencedColumnName="lastTnc")
+    private Transactions transactions;
+
+
+    public Seat() {
+    }
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private long lastTnc;
+
+    private long seatReservation_fk;
+
+    private long movie_fk;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Seat seat = (Seat) o;
+
+        return id == seat.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 
     public Movie getMovie() {
         return movie;
@@ -21,129 +60,59 @@ public class Seat implements  Serializable{
         this.movie = movie;
     }
 
-
-
-    //Eine Sitzplatzbuchung beinhaltet mehrere Sitzplätze
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "seatReservation_fk", nullable = false, referencedColumnName="seatResId")
-    private SeatReservation seatReservation;
-
-    public SeatReservation getSeatReservation() {
-        return seatReservation;
+    public long getMovie_fk() {
+        return movie_fk;
     }
 
-    public void setSeatReservation(SeatReservation seatReservation) {
-        this.seatReservation = seatReservation;
+    public void setMovie_fk(long movie_fk) {
+        this.movie_fk = movie_fk;
     }
 
-    //Eine Transaktion kann mehrere Sitzplätze buchen/verändern
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "lastTnc", nullable = false, referencedColumnName="lastTnc")
-    private Transaction transaction;
+    public long getSeatReservation_fk() {
 
-    public Transaction getTransaction() {
-        return transaction;
-    }
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
+        return seatReservation_fk;
     }
 
-    public Seat() {
+    public void setSeatReservation_fk(long seatReservation_fk) {
+        this.seatReservation_fk = seatReservation_fk;
     }
-
-    @Id
-    @GeneratedValue
-    @Column(name="sId", nullable = false, updatable = false)
-    private long sId;
-
-    @Column(name="lastTnc")
-    private long lastTnc;
-
-    @Column (name="seatReservation_fk")
-    private long srId;
-
-    @Column (name="movie_fk")
-    private long mId;
-
-
-
-    public long getsId() {
-        return sId;
-    }
-
-    public void setsId(long sId) {
-        this.sId = sId;
-    }
-
 
     public long getLastTnc() {
         return lastTnc;
+
     }
 
     public void setLastTnc(long lastTnc) {
         this.lastTnc = lastTnc;
     }
 
-    public long getSrId() {
-        return srId;
-    }
-
-    public void setSrId(long srId) {
-        this.srId = srId;
-    }
-
-    public long getmId() {
-        return mId;
-    }
-
-    public void setmId(long mId) {
-        this.mId = mId;
-    }
-
-    @Override
-    public String toString() {
-        return "Seat{" +
-                "movie=" + movie +
-                ", seatReservation=" + seatReservation +
-                ", transaction=" + transaction +
-                ", sId=" + sId +
-                ", lastTnc=" + lastTnc +
-                ", srId=" + srId +
-                ", mId=" + mId +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Seat seat = (Seat) o;
-
-        if (sId != seat.sId) return false;
-        if (lastTnc != seat.lastTnc) return false;
-        if (srId != seat.srId) return false;
-        if (mId != seat.mId) return false;
-        if (movie != null ? !movie.equals(seat.movie) : seat.movie != null) return false;
-        if (seatReservation != null ? !seatReservation.equals(seat.seatReservation) : seat.seatReservation != null)
-            return false;
-        return !(transaction != null ? !transaction.equals(seat.transaction) : seat.transaction != null);
+    public long getId() {
+        return id;
 
     }
 
-    @Override
-    public int hashCode() {
-        int result = movie != null ? movie.hashCode() : 0;
-        result = 31 * result + (seatReservation != null ? seatReservation.hashCode() : 0);
-        result = 31 * result + (transaction != null ? transaction.hashCode() : 0);
-        result = 31 * result + (int) (sId ^ (sId >>> 32));
-        result = 31 * result + (int) (lastTnc ^ (lastTnc >>> 32));
-        result = 31 * result + (int) (srId ^ (srId >>> 32));
-        result = 31 * result + (int) (mId ^ (mId >>> 32));
-        return result;
+    public void setId(long id) {
+        this.id = id;
     }
 
- /* public void fromJsonObject(JsonObject jsonObject) {
+    public Transactions getTransactions() {
+
+        return transactions;
+    }
+
+    public void setTransactions(Transactions transactions) {
+        this.transactions = transactions;
+    }
+
+    public SeatReservation getSeatReservation() {
+        return seatReservation;
+
+    }
+
+    public void setSeatReservation(SeatReservation seatReservation) {
+        this.seatReservation = seatReservation;
+    }
+    /* public void fromJsonObject(JsonObject jsonObject) {
         sId = long.valueOf(jsonObject.getJsonNumber("sId").longValue());
         lastTnc = jsonObject.getInt("tnc");
         mId = long.valueOf(jsonObject.getJsonNumber("mId").longValue());

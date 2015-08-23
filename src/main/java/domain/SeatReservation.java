@@ -6,53 +6,35 @@ package domain;
 import javax.json.JsonObject;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 
-//@Entity
-@Table(name="seatReservation")
-public class SeatReservation implements Serializable {
-
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "seatReservation")
-    private Set<Seat> seat;
-
-    public Set <Seat> getSeats() {
-        return seat;
-    }
-
-    public void setSeat(Set<Seat> seat) {
-        this.seat = seat;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "seatReservation")
-    private Set<SnackReservation> snackReservation;
-
-    public Set <SnackReservation> getSnackReservation() {
-        return snackReservation;
-    }
-
-    @ManyToOne
-    @JoinColumn(name="lastTnc", referencedColumnName="tId")
-    private Transaction transaction;
-
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
-
+@Entity
+public class SeatReservation {
 
 
     @Id
-    @GeneratedValue
-    @Column(name="seatResId")
-    private long srId;
+    private long id;
 
+    @OneToMany(mappedBy = "seatReservation")
+    private Collection<Seat> seats = new ArrayList<>();
 
-    @Column(name="lastTnc")
+    @OneToMany(mappedBy = "seatReservation")
+    private Collection<SnackReservation> snackReservations = new ArrayList<>();
+
+    @ManyToOne
+    private Transactions transactions;
+
+    public Transactions getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Transactions transactions) {
+        this.transactions = transactions;
+    }
+
     private long lastTnc;
 
 
@@ -69,26 +51,6 @@ public class SeatReservation implements Serializable {
         this.lastTnc = lastTnc;
     }
 
-
-    public long getSrId() {
-        return srId;
-    }
-
-    public void setSrId(long srId) {
-        this.srId = srId;
-    }
-
-    @Override
-    public String toString() {
-        return "SeatReservation{" +
-                "seat=" + seat +
-                ", snackReservation=" + snackReservation +
-                ", transaction=" + transaction +
-                ", srId=" + srId +
-                ", lastTnc=" + lastTnc +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,36 +58,52 @@ public class SeatReservation implements Serializable {
 
         SeatReservation that = (SeatReservation) o;
 
-        if (srId != that.srId) return false;
-        if (lastTnc != that.lastTnc) return false;
-        if (seat != null ? !seat.equals(that.seat) : that.seat != null) return false;
-        if (snackReservation != null ? !snackReservation.equals(that.snackReservation) : that.snackReservation != null)
-            return false;
-        return !(transaction != null ? !transaction.equals(that.transaction) : that.transaction != null);
+        return id == that.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = seat != null ? seat.hashCode() : 0;
-        result = 31 * result + (snackReservation != null ? snackReservation.hashCode() : 0);
-        result = 31 * result + (transaction != null ? transaction.hashCode() : 0);
-        result = 31 * result + (int) (srId ^ (srId >>> 32));
-        result = 31 * result + (int) (lastTnc ^ (lastTnc >>> 32));
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 
-    public void fromJsonObject(JsonObject jsonObject) {
-        srId = Long.valueOf(jsonObject.getJsonNumber("id").longValue());
-        lastTnc = Long.valueOf(jsonObject.getInt("tnc"));
+    public Collection<SnackReservation> getSnackReservations() {
+        return snackReservations;
     }
 
-    public static SeatReservation fromJsonObject2(JsonObject jsonObject) {
-        SeatReservation entity = new SeatReservation();
-        entity.srId = Long.valueOf(jsonObject.getJsonNumber("id").longValue());
-        entity.lastTnc = Long.valueOf(jsonObject.getInt("tnc"));
-        return entity;
+    public void setSnackReservations(Collection<SnackReservation> snackReservations) {
+        this.snackReservations = snackReservations;
     }
+
+    public Collection<Seat> getSeats() {
+
+        return seats;
+    }
+
+    public void setSeats(Collection<Seat> seats) {
+        this.seats = seats;
+    }
+
+    public long getId() {
+        return id;
+
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    //    public void fromJsonObject(JsonObject jsonObject) {
+//        srId = Long.valueOf(jsonObject.getJsonNumber("id").longValue());
+//        lastTnc = Long.valueOf(jsonObject.getInt("tnc"));
+//    }
+//
+//    public static SeatReservation fromJsonObject2(JsonObject jsonObject) {
+//        SeatReservation entity = new SeatReservation();
+//        entity.srId = Long.valueOf(jsonObject.getJsonNumber("id").longValue());
+//        entity.lastTnc = Long.valueOf(jsonObject.getInt("tnc"));
+//        return entity;
+//    }
 
 
 

@@ -8,7 +8,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity
+//@Entity
 public class Person {
 
     @GeneratedValue

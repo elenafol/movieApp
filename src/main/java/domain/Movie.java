@@ -2,66 +2,52 @@ package domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 
 
-//@Entity
-@Table(name="movie")
-public class Movie implements Serializable{
+@Entity
+public class Movie {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     public Movie() {
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
-    private Set<Seat> seats;
+    @OneToMany(mappedBy = "movie")
+    private Collection<Seat> seats = new ArrayList<>();
 
-    public Set <Seat> getSeats() {
-        return seats;
-    }
-    public void setSeats(Set <Seat> seats){this.seats=seats;}
+    @ManyToOne
+    private Transactions transactions;
 
-
-
-    @Id
-    @GeneratedValue
-     @Column(name="mId", nullable = false, updatable = false)
-    private long mId;
-
-
-    @Column(name="title")
     private String title;
 
-    @Column(name="timeAndDay")
-    private Timestamp timestamp;
+    private Timestamp timeandday;
 
-    @Column(name="description")
     private String description;
 
-    @Column(name="urlBild")
     private String urlBild;
 
-    @Column(name="lastTnc")
-    private long lastTnc;
 
-
-    public long getLastTnc() {
-        return lastTnc;
+    public long getId() {
+        return id;
     }
 
-    public void setLastTnc(long lastTnc) {
-        this.lastTnc = lastTnc;
+    public void setId(long id) {
+        this.id = id;
     }
 
-
-    public long getMId() {
-        return mId;
+    public Collection<Seat> getSeats() {
+        return seats;
     }
 
-    public void setMId(long mId) {
-        this.mId = mId;
+    public void setSeats(Collection<Seat> seats) {
+        this.seats = seats;
     }
-
 
     public String getTitle() {
         return title;
@@ -72,11 +58,11 @@ public class Movie implements Serializable{
     }
 
     public Timestamp getTimestamp() {
-        return timestamp;
+        return timeandday;
     }
 
     public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+        this.timeandday = timestamp;
     }
 
     public String getDescription() {
@@ -95,18 +81,20 @@ public class Movie implements Serializable{
         this.urlBild = urlBild;
     }
 
+    public Transactions getTransactions() {
+        return transactions;
+    }
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "seats=" + seats +
-                ", mId=" + mId +
-                ", title='" + title + '\'' +
-                ", timestamp=" + timestamp +
-                ", description='" + description + '\'' +
-                ", urlBild='" + urlBild + '\'' +
-                ", lastTnc=" + lastTnc +
-                '}';
+    public Timestamp getTimeandday() {
+        return timeandday;
+    }
+
+    public void setTimeandday(Timestamp timeandday) {
+        this.timeandday = timeandday;
+    }
+
+    public void setTransactions(Transactions transactions) {
+        this.transactions = transactions;
     }
 
     @Override
@@ -116,29 +104,17 @@ public class Movie implements Serializable{
 
         Movie movie = (Movie) o;
 
-        if (mId != movie.mId) return false;
-        if (lastTnc != movie.lastTnc) return false;
-        if (seats != null ? !seats.equals(movie.seats) : movie.seats != null) return false;
-        if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
-        if (timestamp != null ? !timestamp.equals(movie.timestamp) : movie.timestamp != null) return false;
-        if (description != null ? !description.equals(movie.description) : movie.description != null) return false;
-        return !(urlBild != null ? !urlBild.equals(movie.urlBild) : movie.urlBild != null);
+        return id == movie.id;
+
 
     }
 
     @Override
     public int hashCode() {
-        int result = seats != null ? seats.hashCode() : 0;
-        result = 31 * result + (int) (mId ^ (mId >>> 32));
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (urlBild != null ? urlBild.hashCode() : 0);
-        result = 31 * result + (int) (lastTnc ^ (lastTnc >>> 32));
-        return result;
+        return (int) (id ^ (id >>> 32));
     }
 
-  /* public void fromJsonObject(JsonObject jsonObject) {
+    /* public void fromJsonObject(JsonObject jsonObject) {
         long movieId = long.valueOf(jsonObject.getJsonNumber("id").longValue());
 
         setMId(movieId);
